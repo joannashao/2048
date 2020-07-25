@@ -1,6 +1,4 @@
-# CPSC 210 Project
-
-## Recreating the 2048 game
+# CPSC 210 Project: Recreating the 2048 game
 
 - **What will the application do?**
 
@@ -20,3 +18,13 @@
 
     This game was very popular a few years ago, and I really loved playing it. Therefore I would love to recreate it
     and even add my own twist to it.
+
+## User Stories
+
+- As a user, I want to be able to add a new game-record to my game record list
+
+- As a user, I want to be able to view the game record list
+
+- As a user, I want to be able to start a new game
+
+- As a user, I want to be able to restart the game
