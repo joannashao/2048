@@ -3,12 +3,12 @@ package ui;
 
 import model.GameRecord;
 import model.GameRecordList;
-
+import java.util.ArrayList;
 import java.util.Scanner;
 
 // Represents a game
 public class Game {
-    private GameRecordList recordList;
+    private GameRecordList list;
     private Scanner scanner;
 
     //EFFECTS: run the game
@@ -18,9 +18,10 @@ public class Game {
 
     private void  runGame() {
         boolean stillPlaying = true;
-        recordList = new GameRecordList();
         scanner = new Scanner(System.in);
         GameRecord record = new GameRecord(0, " ", " ");
+        list = new GameRecordList();
+        ArrayList<String> recordList = list.getList();
 
         while (stillPlaying) {
             System.out.println("Welcome! Enter A to start the game or enter L to view record list!");
@@ -28,12 +29,12 @@ public class Game {
             if (scanner.nextLine().equals("A")) {
                 startGame();
             } else if (scanner.nextLine().equals("L")) {
-                viewList();
+                System.out.println(recordList);
             }
 
             if (scanner.nextLine().equals("R")) {
                 record.update(scoreUpdate(), monthUpdate(), dayUpdate());
-                recordList.addNewRecord(record);
+                list.addNewRecord(record);
             }
         }
         System.out.println("Game over!");
@@ -58,8 +59,5 @@ public class Game {
         System.out.println("Playing game...");
     }
 
-    private void viewList() {
-        System.out.println("Record list: " + recordList.getList());
-    }
 
 }

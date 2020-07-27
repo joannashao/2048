@@ -9,7 +9,7 @@ public class GameRecordList {
 
     //EFFECTS: constructs a new empty game record list
     public GameRecordList() {
-        list = new ArrayList<>();
+        list = new ArrayList<GameRecord>();
     }
 
     //MODIFIES: this
@@ -34,12 +34,12 @@ public class GameRecordList {
     }
 
     //EFFECTS: return the whole list as strings
-    public String getList() {
-        for (int i = 0; i <= list.size(); i++) {
-            if (list.size() > 0) {
-                return list.get(i).getScore() + " " + list.get(i).getDate();
-            }
+    ArrayList<String> stringList = new ArrayList<>();
+
+    public ArrayList<String> getList() {
+        for (GameRecord gameRecord : list) {
+            stringList.add(gameRecord.getScore() + " " + gameRecord.getDate());
         }
-        return "No record yet";
+        return stringList;
     }
 }
