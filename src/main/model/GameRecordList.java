@@ -5,33 +5,41 @@ import java.util.ArrayList;
 // Represents a list of game records
 public class GameRecordList {
     public static final int MAX_SIZE = 10;
-    public ArrayList<GameRecord> recordList;
+    public ArrayList<GameRecord> list;
 
     //EFFECTS: constructs a new empty game record list
     public GameRecordList() {
-        recordList = new ArrayList<>();
+        list = new ArrayList<>();
     }
 
     //MODIFIES: this
     //EFFECTS: add a new game record to the record list if list is not full yet, otherwise remove the first record and
     //         then add the new record
     public void addNewRecord(GameRecord g) {
-        if (recordList.size() == MAX_SIZE) {
-            recordList.remove(0);
-            recordList.add(g);
+        if (list.size() == MAX_SIZE) {
+            list.remove(0);
+            list.add(g);
         }
-        recordList.add(g);
+        list.add(g);
     }
 
     //EFFECTS: return the number of game records in the list
     public int getLength() {
-        return recordList.size();
+        return list.size();
     }
 
     //EFFECTS: return the first record in the list (the one entered earliest)
     public GameRecord getFirstRecord() {
-        return recordList.get(0);
+        return list.get(0);
     }
 
-
+    //EFFECTS: return the whole list as strings
+    public String getList() {
+        for (int i = 0; i <= list.size(); i++) {
+            if (list.size() > 0) {
+                return list.get(i).getScore() + " " + list.get(i).getDate();
+            }
+        }
+        return "No record yet";
+    }
 }

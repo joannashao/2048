@@ -25,4 +25,12 @@ public class GameRecord {
         return month + " " + day;
     }
 
+    //MODIFIES: this
+    //EFFECTS: update the record
+    public void update(int score, String month, String day) {
+        this.score = score;
+        this.month = month;
+        this.day = day;
+    }
+
 }

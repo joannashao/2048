@@ -22,4 +22,10 @@ public class GameRecordTest {
         assertEquals("July 24", gameRecord.getDate());
     }
 
+    @Test
+    void testUpdate() {
+        gameRecord.update(124, "August", "12");
+        assertEquals(124, gameRecord.getScore());
+        assertEquals("August 12", gameRecord.getDate());
+    }
 }

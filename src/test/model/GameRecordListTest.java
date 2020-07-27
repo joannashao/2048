@@ -48,4 +48,9 @@ class GameRecordListTest {
         assertEquals(record2, list1.getFirstRecord());
     }
 
+    @Test
+    void testGetList() {
+        list1.addNewRecord(record1);
+        assertEquals("4028 January 26", list1.getList());
+    }
 }
