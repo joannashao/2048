@@ -33,6 +33,7 @@ public class Game {
                 System.out.println(list.getList());
             }
             if (scanner.next().equals("R")) {
+                record = new GameRecord(0, " ", " ");
                 record.update(scoreUpdate(), monthUpdate(), dayUpdate());
                 list.addNewRecord(record);
             }
