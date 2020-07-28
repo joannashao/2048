@@ -34,9 +34,8 @@ public class GameRecordList {
     }
 
     //EFFECTS: return the whole list as strings
-    ArrayList<String> stringList = new ArrayList<>();
-
     public ArrayList<String> getList() {
+        ArrayList<String> stringList = new ArrayList<>();
         for (GameRecord gameRecord : list) {
             stringList.add(gameRecord.getScore() + " " + gameRecord.getDate());
         }

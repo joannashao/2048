@@ -62,4 +62,12 @@ class GameRecordListTest {
         assertEquals(3, list1.getList().size());
     }
 
+    @Test
+    void testGetListAfterAddingNewRecord() {
+        list1.addNewRecord(record1);
+        list1.addNewRecord(record2);
+        assertEquals(2, list1.getList().size());
+        list1.addNewRecord(record3);
+        assertEquals(3, list1.getList().size());
+    }
 }
