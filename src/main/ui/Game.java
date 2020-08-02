@@ -3,13 +3,15 @@ package ui;
 
 import model.GameRecord;
 import model.GameRecordList;
-import java.util.ArrayList;
+
 import java.util.Scanner;
 
 // Represents a game
 public class Game {
     private GameRecordList list;
     private Scanner scanner;
+    GameRecord record = new GameRecord(0, " ", " ");
+    GameRecordList recordList = new GameRecordList();
 
     //EFFECTS: construct the game
     public Game() {
@@ -20,22 +22,18 @@ public class Game {
     private void  runGame() {
         boolean stillPlaying = true;
         scanner = new Scanner(System.in);
-        GameRecord record = new GameRecord(0, " ", " ");
-        list = new GameRecordList();
 
-        for (int i = 0; i <= 3; i++) {
+
+        while (stillPlaying) {
             System.out.println("Welcome! Enter 1 to start the game or enter 2 to view record list!");
             System.out.println("During the game, enter R to restart the game.");
 
-            if (scanner.nextInt() == 1) {
+            String userResponse = scanner.next();
+
+            if (userResponse.equals("1")) {
                 startGame();
-            } else if (scanner.nextInt() == 2) {
-                System.out.println(list.getList());
-            }
-            if (scanner.next().equals("R")) {
-                record = new GameRecord(0, " ", " ");
-                record.update(scoreUpdate(), monthUpdate(), dayUpdate());
-                list.addNewRecord(record);
+            } else if (userResponse.equals("2")) {
+                System.out.println(recordList.getList());
             }
         }
         System.out.println("Game over!");
@@ -62,6 +60,12 @@ public class Game {
     //EFFECTS: initiate the game
     private void startGame() {
         System.out.println("Playing game...");
+        String userResponse = scanner.next();
+        if (userResponse.equals("R")) {
+            record = new GameRecord(0, " ", " ");
+            record.update(scoreUpdate(), monthUpdate(), dayUpdate());
+            recordList.addNewRecord(record);
+        }
     }
 
 
