@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+// A reader that can read game records data from a file
 public class Reader {
     public static final String DELIMITER = ",";
 
