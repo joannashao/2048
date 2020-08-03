@@ -1,6 +1,8 @@
 package persistence;
 
 import model.GameRecord;
+import model.GameRecordList;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -11,6 +13,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class ReaderTest {
+
+    @Test
+    void testReader() {
+        assertEquals(",", Reader.DELIMITER);
+    }
+
     @Test
     void testParseRecordList1() {
         try {
