@@ -18,14 +18,20 @@ public class GameRecordTest {
     }
 
     @Test
-    void testGetDate() {
-        assertEquals("July 24", gameRecord.getDate());
+    void testGetMonth() {
+        assertEquals("July", gameRecord.getMonth());
+    }
+
+    @Test
+    void testGetDay() {
+        assertEquals("24", gameRecord.getDay());
     }
 
     @Test
     void testUpdate() {
         gameRecord.update(124, "August", "12");
         assertEquals(124, gameRecord.getScore());
-        assertEquals("August 12", gameRecord.getDate());
+        assertEquals("August", gameRecord.getMonth());
+        assertEquals("12", gameRecord.getDay());
     }
 }

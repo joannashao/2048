@@ -20,9 +20,14 @@ public class GameRecord {
         return score;
     }
 
-    //EFFECTS: return the date
-    public String getDate() {
-        return month + " " + day;
+    //EFFECTS: return the month
+    public String getMonth() {
+        return month;
+    }
+
+    //EFFECTS: return the day
+    public String getDay() {
+        return day;
     }
 
     //MODIFIES: this
