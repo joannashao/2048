@@ -101,16 +101,31 @@ public class Game {
         gameBoard.generateBlockValue();
 
         while (inGame) {
-            gameBoard.printBoard();
+            printBoard();
             move();
             inGame = checkGameOver();
             if (inGame) {
                 gameBoard.generateBlockValue();
             } else {
-                gameBoard.printBoard();
+                printBoard();
             }
         }
         endGame();
+    }
+
+    public void printBoard() {
+        System.out.println("|-----|-----|-----|-----|");
+        for (int r = 0; r < 4; r++) {
+            for (int c = 0; c < 4; c++) {
+                if (gameBoard.getBlock(r,c) != null) {
+                    System.out.printf("|%5d", gameBoard.getBlock(r,c).getValue());
+                } else {
+                    System.out.print("|     ");
+                }
+            }
+            System.out.println("|");
+            System.out.println("|-----|-----|-----|-----|");
+        }
     }
 
     private void move() {

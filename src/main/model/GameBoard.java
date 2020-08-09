@@ -5,7 +5,7 @@ public class GameBoard {
     public static final int ROW = 4;
     public static final int COL = 4;
 
-    private Block[][] board;
+    protected Block[][] board;
     private int score;
 
     public GameBoard(int score) {
@@ -197,19 +197,5 @@ public class GameBoard {
         }
     }
 
-    public void printBoard() {
-        System.out.println("|-----|-----|-----|-----|");
-        for (int r = 0; r < 4; r++) {
-            for (int c = 0; c < 4; c++) {
-                if (board[r][c] != null) {
-                    System.out.printf("|%5d", board[r][c].getValue());
-                } else {
-                    System.out.print("|     ");
-                }
-            }
-            System.out.println("|");
-            System.out.println("|-----|-----|-----|-----|");
-        }
-    }
 
 }
