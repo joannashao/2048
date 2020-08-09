@@ -8,6 +8,8 @@ public class GameBoard {
     protected Block[][] board;
     private int score;
 
+    // REQUIRES: score >= 0
+    // EFFECTS: constructs a new game board
     public GameBoard(int score) {
         this.score = score;
         board = new Block[ROW][COL];
@@ -17,14 +19,17 @@ public class GameBoard {
         return board[r][c];
     }
 
-    public void scoreUpdate() {
-        this.score += 1;
-    }
-
     public int getScore() {
         return this.score;
     }
 
+    // EFFECTS: updates the score by one
+    public void scoreUpdate() {
+        this.score += 1;
+    }
+
+    //EFFECTS: checks if a block with the given coordinate can merge with blocks above, below, or on its left and right
+    //         return true if it can; false otherwise
     public boolean checkBlockCanMerge(int r, int c) {
         if (checkBlockAbove(r,c)) {
             return true;
@@ -37,6 +42,7 @@ public class GameBoard {
         }
     }
 
+    // EFFECTS: check if block with the given coordinate has the same value as the block above it
     public boolean checkBlockAbove(int r, int c) {
         if (r >= 1) {
             if (board[r][c] != null) {
@@ -46,6 +52,7 @@ public class GameBoard {
         return false;
     }
 
+    // EFFECTS: check if block with the given coordinate has the same value as the block below it
     public boolean checkBlockBelow(int r, int c) {
         if (r <= 2) {
             if (board[r][c] != null) {
@@ -55,6 +62,7 @@ public class GameBoard {
         return false;
     }
 
+    // EFFECTS: check if block with the given coordinate has the same value as the block on its left
     public boolean checkLeftBlock(int r, int c) {
         if (c >= 1) {
             if (board[r][c] != null) {
@@ -64,6 +72,7 @@ public class GameBoard {
         return false;
     }
 
+    // EFFECTS: check if block with the given coordinate has the same value as the block on its right
     public boolean checkRightBlock(int r, int c) {
         if (c <= 2) {
             if (board[r][c] != null) {
@@ -73,6 +82,7 @@ public class GameBoard {
         return false;
     }
 
+    // EFFECTS:
     public boolean moveUp() {
         boolean moved = false;
         boolean columnAllDone;
@@ -109,7 +119,7 @@ public class GameBoard {
             columnAllDone = false;
             while (!columnAllDone) {
                 columnAllDone = true;
-                for (int r = 0; r < 3; r++) {
+                for (int r = 2; r >= 0; r--) {
                     if ((board[r][c] != null) && (board[r + 1][c] == null)) {
                         board[r + 1][c] = board[r][c];
                         board[r][c] = null;

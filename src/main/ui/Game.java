@@ -21,6 +21,7 @@ public class Game {
     private GameRecordList list;
     private Scanner scanner;
     private GameRecord record = new GameRecord(0, " ", " ");
+    boolean stillPlaying = true;
     private boolean inGame = true;
     private GameBoard gameBoard;
 
@@ -31,8 +32,7 @@ public class Game {
     }
 
     // EFFECTS: allow user to either start the game, enter a new record, view record list or restart the game
-    private void  runGame() {
-        boolean stillPlaying = true;
+    private void runGame() {
         scanner = new Scanner(System.in);
         String userResponse = null;
         list = new GameRecordList();
@@ -102,23 +102,23 @@ public class Game {
 
         while (inGame) {
             printBoard();
-            move();
-            inGame = checkGameOver();
-            if (inGame) {
+            boolean moved = move();
+            inGame = checkGameNotOver();
+            if (inGame && moved) {
+                gameBoard.scoreUpdate();
                 gameBoard.generateBlockValue();
             } else {
-                printBoard();
+                stillPlaying = false;
             }
         }
-        endGame();
     }
 
     public void printBoard() {
         System.out.println("|-----|-----|-----|-----|");
         for (int r = 0; r < 4; r++) {
             for (int c = 0; c < 4; c++) {
-                if (gameBoard.getBlock(r,c) != null) {
-                    System.out.printf("|%5d", gameBoard.getBlock(r,c).getValue());
+                if (gameBoard.getBlock(r, c) != null) {
+                    System.out.printf("|%5d", gameBoard.getBlock(r, c).getValue());
                 } else {
                     System.out.print("|     ");
                 }
@@ -128,36 +128,38 @@ public class Game {
         }
     }
 
-    private void move() {
+    private boolean move() {
         boolean moved = false;
         scanner = new Scanner(System.in);
 
-        while (!moved) {
-            String userResponse = scanner.next();
-            switch (userResponse) {
-                case ("w") : moved = gameBoard.moveUp();
-                    break;
+        String userResponse = scanner.next();
+        switch (userResponse) {
+            case ("w"): moved = gameBoard.moveUp();
+                break;
 
-                case ("s") : moved = gameBoard.moveDown();
-                    break;
+            case ("s"): moved = gameBoard.moveDown();
+                break;
 
-                case ("a") : moved = gameBoard.moveLeft();
-                    break;
+            case ("a"): moved = gameBoard.moveLeft();
+                break;
 
-                case ("d") : moved = gameBoard.moveRight();
-                    break;
+            case ("d"): moved = gameBoard.moveRight();
+                break;
 
-                case ("r") :
-                    record = new GameRecord(0, " ", " ");
-                    record.update(scoreUpdate(), monthUpdate(), dayUpdate());
-                    list.addNewRecord(record);
-                    break;
+            case ("r"): moved = false;
+                endGame();
+                startGame();
+                break;
 
-                default : System.out.println("Please enter valid input!");
+            case ("3"): moved = false;
+                this.inGame = false;
+                break;
 
-            }
+            default:
+                System.out.println("Please enter valid input!");
+
         }
-        gameBoard.scoreUpdate();
+        return moved;
     }
 
     // EFFECTS: return the score entered by user
@@ -177,26 +179,34 @@ public class Game {
         return scanner.next();
     }
 
-    private boolean checkGameOver() {
-        for (int r = 0; r < 4; r++) {
-            for (int c = 0; c < 4; c++) {
-                if (gameBoard.getBlock(r,c) == null) {
-                    return true;
-                } else if (gameBoard.checkBlockCanMerge(r,c)) {
-                    return true;
+    private boolean checkGameNotOver() {
+        if (!this.inGame) {
+            return false;
+        } else {
+            for (int r = 0; r < 4; r++) {
+                for (int c = 0; c < 4; c++) {
+                    if (gameBoard.getBlock(r, c) == null) {
+                        return true;
+                    } else if (gameBoard.checkBlockCanMerge(r, c)) {
+                        return true;
+                    }
                 }
             }
+            return false;
         }
-        return false;
     }
 
     // EFFECTS: ends the game
     private void endGame() {
+        System.out.println("Game over!");
+        record = new GameRecord(0, " ", " ");
+        scanner = new Scanner(System.in);
+        record.update(scoreUpdate(), monthUpdate(), dayUpdate());
+        list.addNewRecord(record);
         try {
             Writer writer = new Writer(new File(GAME_RECORD_FILE));
             writer.write(list);
             writer.close();
-            System.out.println("Game over!");
         } catch (FileNotFoundException e) {
             System.out.println("Unable to save records to " + GAME_RECORD_FILE);
         } catch (UnsupportedEncodingException e) {
