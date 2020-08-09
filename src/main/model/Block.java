@@ -18,10 +18,14 @@ public class Block {
         return value;
     }
 
+    // REQUIRES: value >= 0
+    // MODIFIES: this
+    // EFFECTS: set the block value to the given value
     public void setValue(int value) {
         this.value = value;
     }
 
+    //EFFECTS: compare two blocks by checking if their value is the same
     @Override
     public boolean equals(Object o) {
         if (this == o) {

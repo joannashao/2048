@@ -29,6 +29,10 @@
 
 - As a user, I want to be able to restart the game
 
+- As a user, I want to be able to move the blocks
+
+- As a user, I want to be able to end a game during the game
+
 - As a user, when I select quit option from the application menu, I want the game record list to be saved to file
 
 - As a user, I want to be able to optionally load the game record list from file when the program starts

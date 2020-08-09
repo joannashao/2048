@@ -23,6 +23,7 @@ public class GameBoard {
         return this.score;
     }
 
+    // MODIFIES: this
     // EFFECTS: updates the score by one
     public void scoreUpdate() {
         this.score += 1;
@@ -82,7 +83,9 @@ public class GameBoard {
         return false;
     }
 
-    // EFFECTS:
+    // MODIFIES: this
+    // EFFECTS: check if the block can be moved up/merge with the block above. move the block as appropriate and return
+    //          true if block is moved
     public boolean moveUp() {
         boolean moved = false;
         boolean columnAllDone;
@@ -111,6 +114,9 @@ public class GameBoard {
         return moved;
     }
 
+    // MODIFIES: this
+    // EFFECTS: check if the block can be moved down/merge with the block below. move the block as appropriate and
+    // return true if block is moved
     public boolean moveDown() {
         boolean moved = false;
         boolean columnAllDone;
@@ -139,6 +145,9 @@ public class GameBoard {
         return moved;
     }
 
+    // MODIFIES: this
+    // EFFECTS: check if the block can be moved left/merge with the block on the left. move the block as appropriate
+    // and return true if block is moved
     public boolean moveLeft() {
         boolean moved = false;
         boolean columnAllDone;
@@ -167,6 +176,9 @@ public class GameBoard {
         return moved;
     }
 
+    // MODIFIES: this
+    // EFFECTS: check if the block can be moved right/merge with the block on the right. move the block as appropriate
+    // and return true if block is moved
     public boolean moveRight() {
         boolean moved = false;
         boolean columnAllDone;
@@ -195,6 +207,8 @@ public class GameBoard {
         return moved;
     }
 
+    // MODIFIES: this
+    // EFFECTS: generate number 2 or 4 on a random spot in the game board
     public void generateBlockValue() {
         boolean done = false;
         while (!done) {
