@@ -7,6 +7,11 @@ import model.GameRecordList;
 import persistence.Reader;
 import persistence.Writer;
 
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -16,11 +21,22 @@ import java.util.List;
 import java.util.Scanner;
 
 // Represents a game
-public class Game {
+public class Game extends JFrame implements ActionListener {
     private static final String GAME_RECORD_FILE = "./data/gameRecords.txt";
+
+    private JTextPane menu;
+    private JButton listBtn;
+    private JButton enter;
+    private JTextField monthField;
+    private JTextField dayField;
+    private JLabel monthLabel;
+    private JLabel dayLabel;
+    private ImageIcon gameOver;
+    private JLabel gameOverLabel;
+
     private GameRecordList list;
     private Scanner scanner;
-    private GameRecord record = new GameRecord(0, " ", " ");
+    private GameRecord recordScore = new GameRecord(0, " ", " ");
     boolean stillPlaying = true;
     private boolean inGame = true;
     private GameBoard gameBoard;
@@ -28,33 +44,97 @@ public class Game {
 
     // EFFECTS: construct the game
     public Game() {
+        super("2048");
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setPreferredSize(new Dimension(600, 300));
+        ((JPanel) getContentPane()).setBorder(new EmptyBorder(13, 13, 13, 13));
+        setLayout(new FlowLayout());
+        gameOver = new ImageIcon("./data/GameOver.png");
+        gameOverLabel = new JLabel(gameOver);
+        listBtn = new JButton("View Record List");
+        listBtn.setActionCommand("list");
+        listBtn.addActionListener(this);
+        displayMenu();
+        add(listBtn);
+        pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
+        setResizable(false);
         runGame();
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        if (e.getActionCommand().equals("list")) {
+            getList();
+
+        } else if (e.getActionCommand().equals("enter")) {
+            recordScore.update(scoreUpdate(), monthField.getText(), dayField.getText());
+            list.addNewRecord(recordScore);
+            stillPlaying = false;
+            try {
+                Writer writer = new Writer(new File(GAME_RECORD_FILE));
+                writer.write(list);
+                writer.close();
+            } catch (FileNotFoundException exc) {
+                System.out.println("Unable to save records to " + GAME_RECORD_FILE);
+            } catch (UnsupportedEncodingException exc) {
+                exc.printStackTrace();
+            }
+            remove(monthLabel);
+            remove(monthField);
+            remove(dayLabel);
+            remove(dayField);
+            remove(enter);
+            add(gameOverLabel);
+            pack();
+        }
+    }
+
+    private void getList() {
+        loadList();
+        printList();
+    }
+
+    // EFFECTS: displays menu of option to user
+    private void displayMenu() {
+        menu = new JTextPane();
+        menu.setPreferredSize(new Dimension(550, 140));
+        Font f = new Font(Font.SANS_SERIF, Font.PLAIN, 16);
+        menu.setFont(f);
+        menu.setText("Welcome to the game!\n"
+                + "HOW TO PLAY: enter [a], [w],[d] or [s] to move the blocks!\n"
+                + "                             [a]: left   [w]: up   [d]: right   [s]: down\n"
+                + "                             During the game, enter r to restart the game.\n"
+                + "When blocks with same value touches, they merge into one!\n"
+                + "Try to get to 2048:)");
+        menu.setEditable(false);
+        add(menu);
     }
 
     // EFFECTS: allow user to either start the game, enter a new record, view record list or restart the game
     private void runGame() {
-        scanner = new Scanner(System.in);
-        String userResponse = null;
-        list = new GameRecordList();
-
-        loadList();
 
         while (stillPlaying) {
-            displayMenu();
-            userResponse = scanner.next();
-
-            if (userResponse.equals("3")) {
-                stillPlaying = false;
-            } else {
-                processUserResponse(userResponse);
-            }
+            processUserResponse();
         }
         endGame();
+    }
+
+    private void processUserResponse() {
+        scanner = new Scanner(System.in);
+        String userResponse = scanner.next();
+
+        if (userResponse.equals("1")) {
+            startGame();
+        } else {
+            System.out.println("Option not valid! Please choose again");
+        }
     }
 
     // MODIFIES: this
     // EFFECTS: loads game record list from GAME_RECORD_FILE, if that file exists; otherwise initialize empty list
     private void loadList() {
+        list = new GameRecordList();
         try {
             List<GameRecord> fileList = Reader.readGameRecords(new File(GAME_RECORD_FILE));
             for (GameRecord gameRecord : fileList) {
@@ -65,37 +145,16 @@ public class Game {
         }
     }
 
-
-    // EFFECTS: displays menu of option to user
-    private void displayMenu() {
-        System.out.println("Welcome to the game!");
-        System.out.println("1: Start a new game   2: View record list   3: Quit\n");
-        System.out.println("HOW TO PLAY: enter [a], [w],[d] or [s] to move the blocks!");
-        System.out.println("                   [a]: left   [w]: up   [d]: right   [s]: down");
-        System.out.println("                   When blocks with same value touches, they merge into one!");
-        System.out.println("                   During the game, enter r to restart the game.\n");
-        System.out.println("Try to get to 2048:)");
-    }
-
-    private void processUserResponse(String userResponse) {
-        if (userResponse.equals("1")) {
-            startGame();
-        } else if (userResponse.equals("2")) {
-            printList();
-        } else if (userResponse.equals("3")) {
-            endGame();
-        } else {
-            System.out.println("Option not valid! Please choose again");
-        }
-    }
-
     // EFFECTS: prints record list to screen
     private void printList() {
-        System.out.println(list.getList());
+        String recordList = list.getList().toString();
+        menu.setText(recordList);
+        menu.setEditable(false);
     }
 
     // EFFECTS: initiate the game
     private void startGame() {
+        loadList();
         gameBoard = new GameBoard(0);
         gameBoard.generateBlockValue();
         gameBoard.generateBlockValue();
@@ -151,10 +210,6 @@ public class Game {
                 startGame();
                 break;
 
-            case ("3"): moved = false;
-                this.inGame = false;
-                break;
-
             default:
                 System.out.println("Please enter valid input!");
 
@@ -165,18 +220,6 @@ public class Game {
     // EFFECTS: return the score entered by user
     private int scoreUpdate() {
         return gameBoard.getScore();
-    }
-
-    // EFFECTS: return the month entered by user
-    private String monthUpdate() {
-        System.out.println("Please enter the month");
-        return scanner.next();
-    }
-
-    // EFFECTS: return the day entered by user
-    private String dayUpdate() {
-        System.out.println("Please enter the day");
-        return scanner.next();
     }
 
     private boolean checkGameNotOver() {
@@ -199,20 +242,31 @@ public class Game {
     // EFFECTS: ends the game
     private void endGame() {
         System.out.println("Game over!");
-        record = new GameRecord(0, " ", " ");
-        scanner = new Scanner(System.in);
-        record.update(scoreUpdate(), monthUpdate(), dayUpdate());
-        list.addNewRecord(record);
-        try {
-            Writer writer = new Writer(new File(GAME_RECORD_FILE));
-            writer.write(list);
-            writer.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("Unable to save records to " + GAME_RECORD_FILE);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            // due to programming error
-        }
+        recordScore = new GameRecord(0, " ", " ");
+        repaint();
+        remove(listBtn);
+        remove(menu);
+        monthLabel = new JLabel("Month: ");
+        monthField = new JTextField(5);
+        dayLabel = new JLabel("Day: ");
+        dayField = new JTextField(5);
+
+        enter = new JButton("OK");
+        enter.setActionCommand("enter");
+        enter.addActionListener(this);
+
+        add(monthLabel);
+        add(monthField);
+        add(dayLabel);
+        add(dayField);
+        add(enter);
+        pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
+        setResizable(false);
+
+        stillPlaying = true;
+
     }
 
 

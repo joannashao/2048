@@ -36,3 +36,14 @@
 - As a user, when I select quit option from the application menu, I want the game record list to be saved to file
 
 - As a user, I want to be able to optionally load the game record list from file when the program starts
+
+##Instructions for Grader
+- You can load and see the saved record list by clicking on "View Record List" button
+
+- After a round of game is over, you can add a record by enter the month and day and then click "OK" button
+
+- You can locate my visual component by clicking "OK" button (image will pop out)
+
+- You can save the state of my application by clicking "OK" button. Note that game itself does not get saved
+
+- You can load the state of my application by clicking "View Record List" button.
