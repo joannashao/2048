@@ -42,7 +42,7 @@
 
 - After a round of game is over, you can add a record by enter the month and day and then click "OK" button
 
-- You can locate my visual component by clicking "OK" button (image will pop out)
+- You can locate my visual component by clicking "OK" after entering the date
 
 - You can save the state of my application by clicking "OK" button. Note that game itself does not get saved
 

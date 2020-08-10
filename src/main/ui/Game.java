@@ -25,14 +25,14 @@ public class Game extends JFrame implements ActionListener {
     private static final String GAME_RECORD_FILE = "./data/gameRecords.txt";
 
     private JTextPane menu;
-    private JButton listBtn;
+    private final JButton listBtn;
     private JButton enter;
     private JTextField monthField;
     private JTextField dayField;
     private JLabel monthLabel;
     private JLabel dayLabel;
-    private ImageIcon gameOver;
-    private JLabel gameOverLabel;
+    private final ImageIcon gameOver;
+    private final JLabel gameOverLabel;
 
     private GameRecordList list;
     private Scanner scanner;
@@ -40,6 +40,7 @@ public class Game extends JFrame implements ActionListener {
     boolean stillPlaying = true;
     private boolean inGame = true;
     private GameBoard gameBoard;
+    private int currentScore;
 
 
     // EFFECTS: construct the game
@@ -68,7 +69,7 @@ public class Game extends JFrame implements ActionListener {
             getList();
 
         } else if (e.getActionCommand().equals("enter")) {
-            recordScore.update(scoreUpdate(), monthField.getText(), dayField.getText());
+            recordScore.update(currentScore, monthField.getText(), dayField.getText());
             list.addNewRecord(recordScore);
             stillPlaying = false;
             try {
@@ -80,11 +81,8 @@ public class Game extends JFrame implements ActionListener {
             } catch (UnsupportedEncodingException exc) {
                 exc.printStackTrace();
             }
-            remove(monthLabel);
-            remove(monthField);
-            remove(dayLabel);
-            remove(dayField);
-            remove(enter);
+
+            getContentPane().removeAll();
             add(gameOverLabel);
             pack();
         }
@@ -98,10 +96,11 @@ public class Game extends JFrame implements ActionListener {
     // EFFECTS: displays menu of option to user
     private void displayMenu() {
         menu = new JTextPane();
-        menu.setPreferredSize(new Dimension(550, 140));
+        menu.setPreferredSize(new Dimension(550, 160));
         Font f = new Font(Font.SANS_SERIF, Font.PLAIN, 16);
         menu.setFont(f);
         menu.setText("Welcome to the game!\n"
+                + "Enter 1 to start the game!\n"
                 + "HOW TO PLAY: enter [a], [w],[d] or [s] to move the blocks!\n"
                 + "                             [a]: left   [w]: up   [d]: right   [s]: down\n"
                 + "                             During the game, enter r to restart the game.\n"
@@ -162,6 +161,13 @@ public class Game extends JFrame implements ActionListener {
         while (inGame) {
             printBoard();
             boolean moved = move();
+            getContentPane().removeAll();
+            displayMenu();
+            add(listBtn);
+            pack();
+            setLocationRelativeTo(null);
+            setVisible(true);
+            setResizable(false);
             inGame = checkGameNotOver();
             if (inGame && moved) {
                 gameBoard.scoreUpdate();
@@ -217,11 +223,6 @@ public class Game extends JFrame implements ActionListener {
         return moved;
     }
 
-    // EFFECTS: return the score entered by user
-    private int scoreUpdate() {
-        return gameBoard.getScore();
-    }
-
     private boolean checkGameNotOver() {
         if (!this.inGame) {
             return false;
@@ -242,6 +243,7 @@ public class Game extends JFrame implements ActionListener {
     // EFFECTS: ends the game
     private void endGame() {
         System.out.println("Game over!");
+        currentScore = gameBoard.getScore();
         recordScore = new GameRecord(0, " ", " ");
         repaint();
         remove(listBtn);
