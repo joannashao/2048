@@ -85,6 +85,9 @@ public class Game extends JFrame implements ActionListener {
             getContentPane().removeAll();
             add(gameOverLabel);
             pack();
+            setLocationRelativeTo(null);
+            setVisible(true);
+            setResizable(false);
         }
     }
 
