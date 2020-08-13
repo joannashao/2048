@@ -52,3 +52,16 @@
 I chose to test and design a class that is robust. The update method in GameRecord class throws the 
 ImpossibleScoreException. In actionPerformed method in Game class, if a ImpossibleScoreException is caught, the console
 out prints the stacktrace.
+
+##Phase 4: Task 3
+- The GameBoard class in model package had int[][] as a field to represent the board, which would not be a preferable
+option since the cells on the board should be an object which I can later implement a GUI for.
+
+To deal with this problem, I created a new Block class to represent a single cell/block on the game board. A block has
+a coordinate on the board and it has a value. It also has a setValue method in case of the constant value changes in
+this game. The GameBoard class now has Block[][] as a field instead of int[][].
+
+- In the Game class in ui package, all the console related methods and GUI related methods were mixed together in one 
+class.
+I made a new BoardBuilder class in ui package, and moved methods related to GameBoard to the new class. The 
+BoardBuilder class is responsible for creating the actual board and deal with updates of the board.

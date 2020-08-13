@@ -2,7 +2,6 @@ package ui;
 
 
 import exception.ImpossibleScoreException;
-import model.GameBoard;
 import model.GameRecord;
 import model.GameRecordList;
 import persistence.Reader;
@@ -37,12 +36,11 @@ public class Game extends JFrame implements ActionListener {
 
     private GameRecordList list;
     private Scanner scanner;
-//    private GameRecord recordScore = new GameRecord(0, " ", " ");
     private GameRecord recordScore;
-    boolean stillPlaying = true;
+    private boolean stillPlaying = true;
     private boolean inGame = true;
-    private GameBoard gameBoard;
-    private int currentScore;
+    private int scoreNow;
+    private final BoardBuilder builder = new BoardBuilder();
 
 
     // EFFECTS: construct the game
@@ -76,7 +74,7 @@ public class Game extends JFrame implements ActionListener {
 
         } else if (e.getActionCommand().equals("enter")) {
             try {
-                recordScore.update(currentScore, monthField.getText(), dayField.getText());
+                recordScore.update(scoreNow, monthField.getText(), dayField.getText());
             } catch (ImpossibleScoreException exception) {
                 exception.printStackTrace();
             }
@@ -95,6 +93,7 @@ public class Game extends JFrame implements ActionListener {
         }
     }
 
+    // EFFECTS: display the game over image
     private void printGameOverScreen() {
         getContentPane().removeAll();
         add(gameOverLabel);
@@ -170,14 +169,12 @@ public class Game extends JFrame implements ActionListener {
     }
 
     // EFFECTS: initiate the game
-    private void startGame() {
+    protected void startGame() {
         loadList();
-        gameBoard = new GameBoard(0);
-        gameBoard.generateBlockValue();
-        gameBoard.generateBlockValue();
+        builder.initiateBoard();
 
         while (inGame) {
-            printBoard();
+            builder.printBoard();
             boolean moved = move();
             getContentPane().removeAll();
             displayMenu();
@@ -188,27 +185,10 @@ public class Game extends JFrame implements ActionListener {
             setResizable(false);
             inGame = checkGameNotOver();
             if (inGame && moved) {
-                gameBoard.scoreUpdate();
-                gameBoard.generateBlockValue();
+                builder.boardUpdate();
             } else {
                 stillPlaying = false;
             }
-        }
-    }
-
-    // EFFECTS: print out the game board with randomized number
-    public void printBoard() {
-        System.out.println("|-----|-----|-----|-----|");
-        for (int r = 0; r < 4; r++) {
-            for (int c = 0; c < 4; c++) {
-                if (gameBoard.getBlock(r, c) != null) {
-                    System.out.printf("|%5d", gameBoard.getBlock(r, c).getValue());
-                } else {
-                    System.out.print("|     ");
-                }
-            }
-            System.out.println("|");
-            System.out.println("|-----|-----|-----|-----|");
         }
     }
 
@@ -219,16 +199,16 @@ public class Game extends JFrame implements ActionListener {
 
         String userResponse = scanner.next();
         switch (userResponse) {
-            case ("w"): moved = gameBoard.moveUp();
+            case ("w"): moved = builder.moveBlock("w");
                 break;
 
-            case ("s"): moved = gameBoard.moveDown();
+            case ("s"): moved = builder.moveBlock("s");
                 break;
 
-            case ("a"): moved = gameBoard.moveLeft();
+            case ("a"): moved = builder.moveBlock("a");
                 break;
 
-            case ("d"): moved = gameBoard.moveRight();
+            case ("d"): moved = builder.moveBlock("d");
                 break;
 
             case ("r"): moved = false;
@@ -249,23 +229,14 @@ public class Game extends JFrame implements ActionListener {
         if (!this.inGame) {
             return false;
         } else {
-            for (int r = 0; r < 4; r++) {
-                for (int c = 0; c < 4; c++) {
-                    if (gameBoard.getBlock(r, c) == null) {
-                        return true;
-                    } else if (gameBoard.checkBlockCanMerge(r, c)) {
-                        return true;
-                    }
-                }
-            }
-            return false;
+            return builder.checkCanMove();
         }
     }
 
-    // EFFECTS: ends the game
+    // EFFECTS: ends the game and display the page for user to enter a game record date
     private void endGame() {
         System.out.println("Game over!");
-        currentScore = gameBoard.getScore();
+        scoreNow = builder.currentScore();
         recordScore = new GameRecord(0, " ", " ");
         repaint();
         remove(listBtn);
