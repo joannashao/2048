@@ -1,5 +1,7 @@
 package model;
 
+import exception.ImpossibleScoreException;
+
 // Represents a game record
 public class GameRecord {
     private int score;
@@ -9,8 +11,8 @@ public class GameRecord {
 
     //REQUIRES: gameRecord >= 0
     //EFFECTS: constructs a new game record with a score and the date
-    public GameRecord(int gameRecord, String month, String day) {
-        score = gameRecord;
+    public GameRecord(int score, String month, String day) {
+        this.score = score;
         this.month = month;
         this.day = day;
     }
@@ -32,7 +34,10 @@ public class GameRecord {
 
     //MODIFIES: this
     //EFFECTS: update the record
-    public void update(int score, String month, String day) {
+    public void update(int score, String month, String day) throws ImpossibleScoreException {
+        if (score < 0) {
+            throw new ImpossibleScoreException();
+        }
         this.score = score;
         this.month = month;
         this.day = day;

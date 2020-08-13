@@ -47,3 +47,8 @@
 - You can save the state of my application by clicking "OK" button. Note that game itself does not get saved
 
 - You can load the state of my application by clicking "View Record List" button.
+
+##Phase 4: Task 2
+I chose to test and design a class that is robust. The update method in GameRecord class throws the 
+ImpossibleScoreException. In actionPerformed method in Game class, if a ImpossibleScoreException is caught, the console
+out prints the stacktrace.

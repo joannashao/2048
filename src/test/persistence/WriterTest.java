@@ -1,5 +1,6 @@
 package persistence;
 
+import exception.ImpossibleScoreException;
 import model.GameRecord;
 import model.GameRecordList;
 import org.junit.jupiter.api.BeforeEach;

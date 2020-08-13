@@ -1,6 +1,7 @@
 package ui;
 
 
+import exception.ImpossibleScoreException;
 import model.GameBoard;
 import model.GameRecord;
 import model.GameRecordList;
@@ -36,7 +37,8 @@ public class Game extends JFrame implements ActionListener {
 
     private GameRecordList list;
     private Scanner scanner;
-    private GameRecord recordScore = new GameRecord(0, " ", " ");
+//    private GameRecord recordScore = new GameRecord(0, " ", " ");
+    private GameRecord recordScore;
     boolean stillPlaying = true;
     private boolean inGame = true;
     private GameBoard gameBoard;
@@ -62,14 +64,22 @@ public class Game extends JFrame implements ActionListener {
         setVisible(true);
         setResizable(false);
         runGame();
+
     }
 
+    // MODIFIES: this
+    // EFFECTS: catches when an action event has occurred and perform the tasks (display the record list or show the
+    // options for entering records and save the record to file
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("list")) {
             getList();
 
         } else if (e.getActionCommand().equals("enter")) {
-            recordScore.update(currentScore, monthField.getText(), dayField.getText());
+            try {
+                recordScore.update(currentScore, monthField.getText(), dayField.getText());
+            } catch (ImpossibleScoreException exception) {
+                exception.printStackTrace();
+            }
             list.addNewRecord(recordScore);
             stillPlaying = false;
             try {
@@ -81,19 +91,17 @@ public class Game extends JFrame implements ActionListener {
             } catch (UnsupportedEncodingException exc) {
                 exc.printStackTrace();
             }
-
-            getContentPane().removeAll();
-            add(gameOverLabel);
-            pack();
-            setLocationRelativeTo(null);
-            setVisible(true);
-            setResizable(false);
+            printGameOverScreen();
         }
     }
 
-    private void getList() {
-        loadList();
-        printList();
+    private void printGameOverScreen() {
+        getContentPane().removeAll();
+        add(gameOverLabel);
+        pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
+        setResizable(false);
     }
 
     // EFFECTS: displays menu of option to user
@@ -122,7 +130,8 @@ public class Game extends JFrame implements ActionListener {
         endGame();
     }
 
-    private void processUserResponse() {
+    // EFFECTS: starts a new game if user enters 1
+    private void processUserResponse()  {
         scanner = new Scanner(System.in);
         String userResponse = scanner.next();
 
@@ -131,6 +140,12 @@ public class Game extends JFrame implements ActionListener {
         } else {
             System.out.println("Option not valid! Please choose again");
         }
+    }
+
+    // EFFECTS: load the record list from file and print it
+    private void getList() {
+        loadList();
+        printList();
     }
 
     // MODIFIES: this
@@ -181,6 +196,7 @@ public class Game extends JFrame implements ActionListener {
         }
     }
 
+    // EFFECTS: print out the game board with randomized number
     public void printBoard() {
         System.out.println("|-----|-----|-----|-----|");
         for (int r = 0; r < 4; r++) {
@@ -196,6 +212,7 @@ public class Game extends JFrame implements ActionListener {
         }
     }
 
+    // EFFECTS: takes in a user input for either moving the blocks(numbers) or restart the game
     private boolean move() {
         boolean moved = false;
         scanner = new Scanner(System.in);
@@ -226,6 +243,8 @@ public class Game extends JFrame implements ActionListener {
         return moved;
     }
 
+    // EFFECTS: check if the game is not over. return true if game board is have empty slot or if two blocks can merge
+    // return false otherwise
     private boolean checkGameNotOver() {
         if (!this.inGame) {
             return false;

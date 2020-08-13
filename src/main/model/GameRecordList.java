@@ -13,7 +13,7 @@ public class GameRecordList implements Saveable {
 
     //EFFECTS: constructs a new empty game record list
     public GameRecordList() {
-        list = new ArrayList<GameRecord>();
+        list = new ArrayList<>();
     }
 
     //MODIFIES: this
