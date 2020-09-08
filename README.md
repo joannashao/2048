@@ -16,8 +16,7 @@
 
 - **Why is this project of interest to you?**
 
-    This game was very popular a few years ago, and I really loved playing it. Therefore I would love to recreate it
-    and even add my own twist to it.
+    This game was very popular a few years ago, and I really loved playing it. Therefore I would love to recreate it.
 
 ## User Stories
 
